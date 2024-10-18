@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
 import time
 
 service = Service(executable_path="C:/Users/elif-/Downloads/chromedriver-win64/chromedriver.exe")
@@ -26,7 +27,6 @@ driver = webdriver.Chrome(service=service, options=chrome_options)
 
 url = "https://www.hepsiburada.com/ara?q=diz%C3%BCst%C3%BC+bilgisayar"
 driver.get(url) 
-hyperlinks = []
 
 # ACCEPT COOKIES
 btn_accept_cookies = WebDriverWait(driver, 5).until(
@@ -34,17 +34,29 @@ btn_accept_cookies = WebDriverWait(driver, 5).until(
     )
 btn_accept_cookies.click()
 
-# RESULTS LIST: doesn't work
-results = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.ID, '1'))
-)
-print(results)
 
-# CLICK LOAD MORE: doesn't work
-btn_load_more = WebDriverWait(driver, 20).until(
-    EC.element_to_be_clickable(By.XPATH, '//*[@id="ProductList_7e0b1457-b9cf-4e4d-08d1-aebeca49a1e3"]/div/div/div/div/div[1]/button')
-)
-btn_load_more.click()
+# Get the HTML content source
+time.sleep(10)
+html_content = driver.page_source
+
+
+# Parse html_content with BeautifulSoup4
+soup = BeautifulSoup(html_content, 'html.parser')
+
+
+# Get the hyperlinks of the first 10 elements
+href_list = []
+for i in range(1, 10):
+    product_id = 'i' + str(i)
+    li_elm = soup.find('li', id=product_id)
+
+    if li_elm:
+        a_elm = li_elm.find('a')
+        if a_elm and 'href' in a_elm.attrs:
+            href_list.append(a_elm['href'])
+
+
+print(href_list)
 
 
 time.sleep(60)
