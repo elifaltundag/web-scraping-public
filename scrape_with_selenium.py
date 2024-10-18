@@ -34,13 +34,13 @@ btn_accept_cookies = WebDriverWait(driver, 5).until(
     )
 btn_accept_cookies.click()
 
-# RESULTS LIST
+# RESULTS LIST: doesn't work
 results = WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.ID, '1'))
 )
 print(results)
 
-# CLICK LOAD MORE
+# CLICK LOAD MORE: doesn't work
 btn_load_more = WebDriverWait(driver, 20).until(
     EC.element_to_be_clickable(By.XPATH, '//*[@id="ProductList_7e0b1457-b9cf-4e4d-08d1-aebeca49a1e3"]/div/div/div/div/div[1]/button')
 )
